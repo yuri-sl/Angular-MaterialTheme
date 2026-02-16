@@ -1,15 +1,66 @@
 <div fxLayout="row" fxLayoutAlign="center">
     <div fxLayout="column" fxFlex="1000px">
-        <form [formGroup]="cadastrarUserForm">
+        <form [formGroup]="cadastrarUserForm" (ngSubmit)="onSubmit()">
             <mat-card>
                 <mat-card-header>
                     <mat-card-title>Dados Pessoais</mat-card-title>
                 </mat-card-header>
                 <mat-card-content class="mt-20">
                     <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="16px">
-
+                        <mat-form-field class="full-width">
+                            <mat-label>Nome: *</mat-label>
+                            <input type="text" 
+                            formControlName="nome"
+                            placeholder="Insira um nome"
+                            matInput>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="column" fxLayoutAlign="start" fxLayoutGap="16px">
+                        <mat-form-field class="full-width">
+                            <mat-label>Email</mat-label>
+                            <input type="text" 
+                            formControlName="email"
+                            placeholder="Digite seu email"
+                                matInput>
+                        </mat-form-field>
+                        <mat-form-field class="full-width">
+                            <mat-label>CPF</mat-label>
+                            <input type="text"
+                             formControlName="cpf"
+                             placeholder="Digite seu CPF"
+                             matInput
+                            >
+                        </mat-form-field>
+                        <mat-form-field class="full-width">
+                            <mat-label>Data de nascimento</mat-label>
+                            <input type="text"
+                             formControlName="dataNascimento"
+                              placeholder="Digite sua data de nascimento"
+                               matInput>
+                        </mat-form-field>
                     </div>
                 </mat-card-content>
+                <mat-card-actions>
+                    <div fxLayout="row">
+                        <div fxLayout="column">
+                            <button mat-flat-button color="primary">
+                                <mat-icon fontIcon="save">
+                                </mat-icon>
+                                Salvar
+                            </button>
+                            <button mat-flat-button color="primary">
+                                <mat-icon fontIcon="refresh">
+                                </mat-icon>
+                                Atualizar
+                            </button>
+                            <button mat-flat-button color="accent" class="ml-5">
+                                <mat-icon fontIcon="backspace">
+                                </mat-icon>
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </mat-card-actions>
             </mat-card>
         </form>
 

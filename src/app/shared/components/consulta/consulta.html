@@ -1,1 +1,54 @@
-<p>consulta works!</p>
+<div fxLayout="row" fxLayoutAlign="center">
+    <div fxLayout="column" fxFlex="1000px">
+        <form class="mt-60" [formGroup]="buscaForm">
+            <mat-card appearance="outlined">
+                <mat-card-header>
+                    <mat-card-title>Consulta de usuários</mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="mt-20">
+                    <div fxLayout="row">
+                        <div fxLayout="column">
+                            <mat-form-field>
+                                <mat-label>
+                                    Nome:
+                                </mat-label>
+                                <input formControlName="nome" name="nome" matInput>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-flat-button>
+                        <mat-icon fontIcon="search"></mat-icon>
+                        Pesquisar</button>
+                    <button mat-flat-button color="primary">
+                        <mat-icon fontIcon="backspace">
+                        </mat-icon>
+                        Cancelar
+                    </button>
+                </mat-card-actions>
+                <!--Versão com tabela em HTML-->
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>CPF</th>
+                            <th>Email</th>
+                            <th>Aniversário</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (item of listaClientes; track $index) {
+                            <tr>
+                                <td>{{item.nome}}</td>
+                                <td>{{item.cpf}}</td>
+                                <td>{{item.email}}</td>
+                                <td>{{item.dataNascimento}}</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </mat-card>
+        </form>
+    </div>
+</div>
