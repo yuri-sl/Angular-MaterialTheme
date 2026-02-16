@@ -18,6 +18,7 @@ import { ClienteLogic } from '../cadastro/clienteLogic';
 })
 export class Consulta implements OnInit{
   buscaForm!: FormGroup;
+  displayedColumns: string[] = ['nome','email','cpf','dataNascimento'];
 
   listaClientes!: ClienteLogic[];
   constructor(
