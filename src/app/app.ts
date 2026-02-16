@@ -7,7 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-root',
   imports: [RouterOutlet,MatButtonModule,MatIconModule],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
+  standalone:true
 })
 export class App {
   protected readonly title = signal('angular-material-theme');

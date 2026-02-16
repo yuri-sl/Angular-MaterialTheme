@@ -7,5 +7,7 @@ import { Consulta } from './shared/components/consulta/consulta';
 export const routes: Routes = [
     {path:'crud',component:CrudPage},
     {path:'cadastro',component:Cadastro },
-    {path:'consulta',component:Consulta}
+    {path:'consulta',component:Consulta},
+    {path:'**',redirectTo:'crud'},
+    {path:'',redirectTo:'crud',pathMatch:'full'}
 ];
