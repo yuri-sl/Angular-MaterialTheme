@@ -7,7 +7,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatTableModule } from '@angular/material/table';
 import { MatAnchor } from "@angular/material/button";
 import { MatButtonModule } from '@angular/material/button';
-import { Cliente } from '../../../cliente';
+import { Cliente } from '../../../cliente.service';
 import { ClienteLogic } from '../cadastro/clienteLogic';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';

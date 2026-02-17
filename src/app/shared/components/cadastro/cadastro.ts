@@ -8,11 +8,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatAnchor } from "@angular/material/button";
 import { MatIcon } from '@angular/material/icon';
 import { ClienteLogic } from './clienteLogic';
-import { Cliente } from '../../../cliente';
+import { Cliente } from '../../../cliente.service';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import {NgxMaskDirective,provideNgxMask} from 'ngx-mask';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Brasilapi } from '../../../brasilapi.service';
+import { Estado, Municipio } from '../../../brasilapi.models';
 
 @Component({
   selector: 'app-cadastro',
@@ -35,12 +37,15 @@ export class Cadastro implements OnInit{
   atualizando:boolean = false;
   cliente:ClienteLogic = ClienteLogic.newCliente();  
   private _snackBar = inject(MatSnackBar);
+  estados: Estado[] = [];
+  municipios: Municipio[] = [];
 
   constructor( 
     private fb : FormBuilder,
     private clienteService: Cliente,
     private route:ActivatedRoute,
-    private router:Router
+    private router:Router,
+    private brasilApiService:Brasilapi
   ){
     this.cadastrarUserForm = fb.group({
       id:['',Validators.required],
@@ -54,6 +59,7 @@ export class Cadastro implements OnInit{
   }
   ngOnInit(): void {
     this.carregarDadosCliente();
+    this.carregarUFs();
   }
   onSubmit(){
     console.log(this.cadastrarUserForm.value);
@@ -134,6 +140,17 @@ export class Cadastro implements OnInit{
   }
   openSnackBar(message:string,action:string){
     this._snackBar.open(message,action);
+  }
+
+  carregarUFs(){
+    //observable subscribe. Subscribe O subscribe é necessário pois o observable fica observando para ver se
+    //recebe uma resposta, e quando isso acontece o subscribe precisa notificar que uma resposta foi recebida
+    this.brasilApiService.listarUFs().subscribe({
+      next: listaEstados => console.log("lista estados",listaEstados),
+      error: erro => console.log("ocorreu um erro: ",erro)
+    });
+
+
   }
 
 
