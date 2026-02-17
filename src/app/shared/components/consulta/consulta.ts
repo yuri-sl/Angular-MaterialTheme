@@ -9,21 +9,26 @@ import { MatAnchor } from "@angular/material/button";
 import { MatButtonModule } from '@angular/material/button';
 import { Cliente } from '../../../cliente';
 import { ClienteLogic } from '../cadastro/clienteLogic';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-consulta',
-  imports: [MatInputModule,MatButtonModule, MatCardModule, MatIconModule, MatTableModule, FlexLayoutModule, ReactiveFormsModule, MatAnchor,ReactiveFormsModule],
+  imports: [MatInputModule,MatButtonModule, MatCardModule, MatIconModule, MatTableModule, FlexLayoutModule, ReactiveFormsModule, MatAnchor,ReactiveFormsModule,CommonModule],
   templateUrl: './consulta.html',
   styleUrl: './consulta.scss',
 })
 export class Consulta implements OnInit{
   buscaForm!: FormGroup;
-  displayedColumns: string[] = ['nome','email','cpf','dataNascimento'];
+  displayedColumns: string[] = ['id','nome','email','cpf','dataNascimento','acoes'];
+  nomeBusca:string = '';
+  deletando:boolean = false;
 
   listaClientes!: ClienteLogic[];
   constructor(
     private fb:FormBuilder,
-    private clienteService:Cliente
+    private clienteService:Cliente,
+    private router:Router
   ){
     this.buscaForm = fb.group({
       nome:['',Validators.required],
@@ -35,8 +40,30 @@ export class Consulta implements OnInit{
     console.log(this.listaClientes);
   }
 
-  pesquisarClienteNome(nome:string){
+  pesquisarClienteNome(){
+    let nomeBuscado = this.buscaForm.value.nome;
+    this.listaClientes=this.clienteService.pesquisarCliente(nomeBuscado);
+  }
 
+  prepararEditar(id:string){
+    console.log("ID RECEBIDO: ",id)
+    //navegar entre páginas
+    this.router.navigate(['/cadastro'],{queryParams: {"id":id}});
+
+  }
+
+  redirecionarCriarNovo(){
+    this.router.navigate(['/cadastro']);
+  }
+
+  prepararDeletar(){
+    this.deletando = true;
+  }
+
+  deletar(cliente:ClienteLogic){
+    this.clienteService.deletar(cliente);
+    this.deletando = false;
+    this.listaClientes = this.clienteService.obterStorage();
   }
 
 

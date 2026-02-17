@@ -16,8 +16,30 @@ export class Cliente {
       //Salvar novo cliente no repoClientes
       console.log(cliente);
       let listaClientes:ClienteLogic[] = this.obterStorage();
+
       listaClientes.push(cliente);
       localStorage.setItem(Cliente.REPO_CLIENTES,JSON.stringify(listaClientes));
+  }
+  editar(cliente:ClienteLogic){
+    let listaClientes:ClienteLogic[] = this.obterStorage();
+    const clienteEncontado = listaClientes.find((c) => c.id === cliente.id);
+    if(!clienteEncontado) return;
+
+    clienteEncontado.nome = cliente.nome;
+    clienteEncontado.cpf = cliente.cpf;
+    clienteEncontado.dataNascimento = cliente.dataNascimento;
+    clienteEncontado.email = cliente.email;
+
+    localStorage.setItem(Cliente.REPO_CLIENTES,JSON.stringify(listaClientes));
+    /* Outra abordagem
+    const storage = this.obterStorage;
+    storage.forEach((c) => {
+      if(c.id === cliente.id){
+        Object.assign(c,cliente);
+      }
+    })
+      localStorage.setItem(Cliente.REPO_CLIENTES,JSON.stringify(storage))
+    */
   }
 
   obterStorage(): ClienteLogic[] {
@@ -36,7 +58,42 @@ export class Cliente {
   }
 
   pesquisarCliente(nome:string) : ClienteLogic[]{
-    return this.obterStorage();
+
+    const listaClientes:ClienteLogic[] = this.obterStorage();
+    if(!nome){
+      return listaClientes;
+    }
+    /*
+    function(cliente){
+
+
+    }
+    */
+
+    return listaClientes.filter(cliente => cliente.nome?.indexOf(nome) !== -1)
+
+  }
+
+  buscarClientePorId(id:string):ClienteLogic | undefined{
+    const clientes = this.obterStorage();
+    return clientes.find( cliente => cliente.id === id);
+  }
+
+  deletarClientePorId(id:string){
+    let clientes = this.obterStorage();
+    if(clientes.find(cliente => cliente.id === id)){
+      //Encontrado
+      clientes
+
+    }
+  }
+
+  deletar(cliente:ClienteLogic){
+    const storage = this.obterStorage();
+
+    const novaLista = storage.filter(c=> c.id !== cliente.id)
+
+    localStorage.setItem(Cliente.REPO_CLIENTES,JSON.stringify(novaLista));
   }
   
 }

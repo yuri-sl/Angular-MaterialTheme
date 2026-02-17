@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,OnInit, Query } from '@angular/core';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import { MatCardModule } from '@angular/material/card';
 import { ReactiveFormsModule,FormBuilder,FormControl, FormGroup, Validators } from '@angular/forms';
@@ -9,6 +9,8 @@ import { MatAnchor } from "@angular/material/button";
 import { MatIcon } from '@angular/material/icon';
 import { ClienteLogic } from './clienteLogic';
 import { Cliente } from '../../../cliente';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-cadastro',
@@ -18,17 +20,23 @@ import { Cliente } from '../../../cliente';
     ReactiveFormsModule,
     MatFormField,
     MatInputModule,
-    MatIconModule, MatAnchor,MatIcon],
+    MatIconModule, MatAnchor,MatIcon,CommonModule],
   templateUrl: './cadastro.html',
   styleUrl: './cadastro.scss'
 })
-export class Cadastro {
+export class Cadastro implements OnInit{
   cadastrarUserForm: FormGroup;
+  atualizando:boolean = false;
+  cliente:ClienteLogic = ClienteLogic.newCliente();  
+
   constructor( 
     private fb : FormBuilder,
-    private clienteService: Cliente
+    private clienteService: Cliente,
+    private route:ActivatedRoute,
+    private router:Router
   ){
     this.cadastrarUserForm = fb.group({
+      id:['',Validators.required],
       nome: ['',Validators.required],
       email: ['',Validators.required],
       cpf: ['',Validators.required],
@@ -37,10 +45,70 @@ export class Cadastro {
 
 
   }
+  ngOnInit(): void {
+    this.carregarDadosCliente();
+  }
   onSubmit(){
     console.log(this.cadastrarUserForm.value);
-    this.clienteService.salvar(this.cadastrarUserForm.value);
+    const id_cliente = this.cadastrarUserForm.value.id
+    if(this.cadastrarUserForm.valid && !this.verificarSeClienteExiste(id_cliente)){
+      console.log("Cliente não existe");
+      let newCliente = ClienteLogic.newCliente();
+      this.cadastrarUserForm.patchValue({
+        id:newCliente.id
+      })
+      this.clienteService.salvar(this.cadastrarUserForm.value);
+
+
+
+    }
+    else{
+      console.log('cliente já existe')
+      const formValue = this.cadastrarUserForm.getRawValue();
+      const clienteEditar:ClienteLogic = {
+        id:String(formValue.id),
+        nome:String(formValue.nome),
+        email:String(formValue.email),
+        cpf:String(formValue.cpf),
+        dataNascimento:String(formValue.dataNascimento)
+      };
+      this.clienteService.editar(clienteEditar);
+      console.log("Cliente editado!");
+    }
+    this.router.navigate(['/consulta']);
   }
-  cliente:ClienteLogic = ClienteLogic.newCliente();  
+
+  carregarDadosCliente():void{
+      this.route.queryParamMap.subscribe( (query:any) => {
+      //const params = query['params'];
+      //const id = params['id'];
+      const id = query.get('id');
+      // console.log("Parâmetros: ",params);
+      if(id){
+        this.atualizando = true;
+        console.log(this.atualizando);
+        //se n encontrar nenhum cliente ent vai criar um novo
+        this.cliente = this.clienteService.buscarClientePorId(id) || ClienteLogic.newCliente();
+        console.log(this.cliente);
+        this.cadastrarUserForm.patchValue({
+          id:this.cliente.id,
+          nome:this.cliente.nome,
+          email:this.cliente.email,
+          cpf:this.cliente.cpf,
+          dataNascimento:this.cliente.dataNascimento
+        });
+        console.log('Form preenchido:', this.cadastrarUserForm.value);
+      }
+    })
+
+  }
+  verificarSeClienteExiste(id:string):boolean{
+    let clienteEncontrado = this.clienteService.buscarClientePorId(id);
+    if(clienteEncontrado === undefined){
+      return false;
+    }
+    return true;
+  }
+
 
 }
