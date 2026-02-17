@@ -146,8 +146,13 @@ export class Cadastro implements OnInit{
     //observable subscribe. Subscribe O subscribe é necessário pois o observable fica observando para ver se
     //recebe uma resposta, e quando isso acontece o subscribe precisa notificar que uma resposta foi recebida
     this.brasilApiService.listarUFs().subscribe({
-      next: listaEstados => console.log("lista estados",listaEstados),
-      error: erro => console.log("ocorreu um erro: ",erro)
+      next: listaEstados => {
+        console.log("lista estados",listaEstados);
+        this.estados = listaEstados;
+      } ,
+      error: erro => {
+        console.log("ocorreu um erro: ",erro)
+      } 
     });
 
 
