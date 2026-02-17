@@ -1,4 +1,4 @@
-import { Component,OnInit, Query } from '@angular/core';
+import { Component,inject,OnInit, Query } from '@angular/core';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import { MatCardModule } from '@angular/material/card';
 import { ReactiveFormsModule,FormBuilder,FormControl, FormGroup, Validators } from '@angular/forms';
@@ -11,6 +11,8 @@ import { ClienteLogic } from './clienteLogic';
 import { Cliente } from '../../../cliente';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import {NgxMaskDirective,provideNgxMask} from 'ngx-mask';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-cadastro',
@@ -20,7 +22,11 @@ import { CommonModule } from '@angular/common';
     ReactiveFormsModule,
     MatFormField,
     MatInputModule,
-    MatIconModule, MatAnchor,MatIcon,CommonModule],
+    MatIconModule, 
+    MatAnchor,
+    MatIcon,
+    CommonModule,NgxMaskDirective],
+    providers:[provideNgxMask()],
   templateUrl: './cadastro.html',
   styleUrl: './cadastro.scss'
 })
@@ -28,6 +34,7 @@ export class Cadastro implements OnInit{
   cadastrarUserForm: FormGroup;
   atualizando:boolean = false;
   cliente:ClienteLogic = ClienteLogic.newCliente();  
+  private _snackBar = inject(MatSnackBar);
 
   constructor( 
     private fb : FormBuilder,
@@ -71,6 +78,7 @@ export class Cadastro implements OnInit{
       };
       this.clienteService.salvar(clienteNovo);
       console.log('Cliente salvo!');
+      this.openSnackBar('Cliente salvo','ok');
 
 
 
@@ -87,6 +95,8 @@ export class Cadastro implements OnInit{
       };
       this.clienteService.editar(clienteEditar);
       console.log("Cliente editado!");
+      this.openSnackBar('Cliente editado','ok');
+
     }
     this.router.navigate(['/consulta']);
   }
@@ -121,6 +131,9 @@ export class Cadastro implements OnInit{
       return false;
     }
     return true;
+  }
+  openSnackBar(message:string,action:string){
+    this._snackBar.open(message,action);
   }
 
 
