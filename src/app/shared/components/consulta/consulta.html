@@ -63,8 +63,8 @@
                                 </mat-icon>
                                 Editar
                             </button>
-                            @if (!deletando) {
-                                <button type="button" mat-button (click)="prepararDeletar()">
+                            @if (!element.deletando) {
+                                <button type="button" mat-button (click)="prepararDeletar(element)">
                                     <mat-icon fontIcon="delete">
                                     </mat-icon>
                                     Deletar

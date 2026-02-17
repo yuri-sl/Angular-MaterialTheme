@@ -6,6 +6,7 @@ export class ClienteLogic{
     cpf?:string;
     dataNascimento?:string;
     email?:string;
+    deletando?:boolean;
 
     static newCliente(){
         let cliente = new ClienteLogic();

@@ -56,13 +56,13 @@ export class Consulta implements OnInit{
     this.router.navigate(['/cadastro']);
   }
 
-  prepararDeletar(){
-    this.deletando = true;
+  prepararDeletar(cliente:ClienteLogic){
+    cliente.deletando = true;
   }
 
   deletar(cliente:ClienteLogic){
     this.clienteService.deletar(cliente);
-    this.deletando = false;
+    cliente.deletando = false;
     this.listaClientes = this.clienteService.obterStorage();
   }
 
