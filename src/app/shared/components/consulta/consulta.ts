@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -11,6 +11,7 @@ import { Cliente } from '../../../cliente';
 import { ClienteLogic } from '../cadastro/clienteLogic';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-consulta',
@@ -23,6 +24,7 @@ export class Consulta implements OnInit{
   displayedColumns: string[] = ['id','nome','email','cpf','dataNascimento','acoes'];
   nomeBusca:string = '';
   deletando:boolean = false;
+  private snack = inject(MatSnackBar);
 
   listaClientes!: ClienteLogic[];
   constructor(
@@ -43,6 +45,7 @@ export class Consulta implements OnInit{
   pesquisarClienteNome(){
     let nomeBuscado = this.buscaForm.value.nome;
     this.listaClientes=this.clienteService.pesquisarCliente(nomeBuscado);
+    this.openSnackBar('pesquisando cliente');
   }
 
   prepararEditar(id:string){
@@ -64,6 +67,10 @@ export class Consulta implements OnInit{
     this.clienteService.deletar(cliente);
     cliente.deletando = false;
     this.listaClientes = this.clienteService.obterStorage();
+    this.openSnackBar('usuário deletado');
+  }
+  openSnackBar(message:string){
+    return this.snack.open(message,'OK');
   }
 
 
