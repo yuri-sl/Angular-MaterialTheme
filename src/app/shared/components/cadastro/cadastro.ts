@@ -50,14 +50,27 @@ export class Cadastro implements OnInit{
   }
   onSubmit(){
     console.log(this.cadastrarUserForm.value);
-    const id_cliente = this.cadastrarUserForm.value.id
-    if(this.cadastrarUserForm.valid && !this.verificarSeClienteExiste(id_cliente)){
+    const formValue = this.cadastrarUserForm.getRawValue();
+    const idCliente = String(formValue.id ?? '');
+
+    const clientePayload: ClienteLogic = {
+      id: idCliente,
+      nome: String(formValue.nome ?? '').trim(),
+      email: String(formValue.email ?? '').trim(),
+      cpf: String(formValue.cpf ?? '').trim(),
+      dataNascimento: String(formValue.dataNascimento ?? '')
+    };
+    console.log(this.verificarSeClienteExiste(idCliente));
+
+    if(!this.verificarSeClienteExiste(idCliente)){
       console.log("Cliente não existe");
       let newCliente = ClienteLogic.newCliente();
-      this.cadastrarUserForm.patchValue({
-        id:newCliente.id
-      })
-      this.clienteService.salvar(this.cadastrarUserForm.value);
+      const clienteNovo: ClienteLogic = {
+        ...clientePayload,
+        id: String(newCliente.id)
+      };
+      this.clienteService.salvar(clienteNovo);
+      console.log('Cliente salvo!');
 
 
 
