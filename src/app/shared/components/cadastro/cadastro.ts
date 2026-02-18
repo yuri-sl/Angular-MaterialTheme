@@ -15,6 +15,7 @@ import {NgxMaskDirective,provideNgxMask} from 'ngx-mask';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Brasilapi } from '../../../brasilapi.service';
 import { Estado, Municipio } from '../../../brasilapi.models';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-cadastro',
@@ -27,7 +28,7 @@ import { Estado, Municipio } from '../../../brasilapi.models';
     MatIconModule, 
     MatAnchor,
     MatIcon,
-    CommonModule,NgxMaskDirective],
+    CommonModule,NgxMaskDirective,MatSelectModule],
     providers:[provideNgxMask()],
   templateUrl: './cadastro.html',
   styleUrl: './cadastro.scss'
@@ -52,7 +53,9 @@ export class Cadastro implements OnInit{
       nome: ['',Validators.required],
       email: ['',Validators.required],
       cpf: ['',Validators.required],
-      dataNascimento: ['',Validators.required]
+      dataNascimento: ['',Validators.required],
+      uf:['',Validators.required],
+      municipio:['',Validators.required]
     })
 
 
@@ -60,6 +63,7 @@ export class Cadastro implements OnInit{
   ngOnInit(): void {
     this.carregarDadosCliente();
     this.carregarUFs();
+    console.log(this.cadastrarUserForm.value);
   }
   onSubmit(){
     console.log(this.cadastrarUserForm.value);
@@ -71,7 +75,9 @@ export class Cadastro implements OnInit{
       nome: String(formValue.nome ?? '').trim(),
       email: String(formValue.email ?? '').trim(),
       cpf: String(formValue.cpf ?? '').trim(),
-      dataNascimento: String(formValue.dataNascimento ?? '')
+      dataNascimento: String(formValue.dataNascimento ?? ''),
+      uf:String(formValue.uf??''),
+      municipio:String(formValue.municipio??'')
     };
     console.log(this.verificarSeClienteExiste(idCliente));
 
@@ -97,7 +103,9 @@ export class Cadastro implements OnInit{
         nome:String(formValue.nome),
         email:String(formValue.email),
         cpf:String(formValue.cpf),
-        dataNascimento:String(formValue.dataNascimento)
+        dataNascimento:String(formValue.dataNascimento),
+        uf:String(formValue.uf??''),
+        municipio:String(formValue.municipio??'')
       };
       this.clienteService.editar(clienteEditar);
       console.log("Cliente editado!");
@@ -124,7 +132,8 @@ export class Cadastro implements OnInit{
           nome:this.cliente.nome,
           email:this.cliente.email,
           cpf:this.cliente.cpf,
-          dataNascimento:this.cliente.dataNascimento
+          dataNascimento:this.cliente.dataNascimento,
+          uf:this.cliente.uf,
         });
         console.log('Form preenchido:', this.cadastrarUserForm.value);
       }
@@ -154,8 +163,29 @@ export class Cadastro implements OnInit{
         console.log("ocorreu um erro: ",erro)
       } 
     });
+  }
 
+  carregarMunicipios(ufSelecionada:string,municipioSelecionado?:String):void{
+    console.log("Carregando municipios")
+    if(!ufSelecionada){
+      this.municipios = [];
+      this.cadastrarUserForm.patchValue({municipio:''});
+      return;
+    }
 
+    this.brasilApiService.listarMunicipios(ufSelecionada).subscribe({
+      next: listaMunicipios => {
+        this.municipios = listaMunicipios
+        if(municipioSelecionado){
+          this.cadastrarUserForm.patchValue({municipio:municipioSelecionado});
+        }
+      },
+      error: err => {
+
+        console.error(err)
+      } 
+    })
+    console.log(this.municipios);
   }
 
 

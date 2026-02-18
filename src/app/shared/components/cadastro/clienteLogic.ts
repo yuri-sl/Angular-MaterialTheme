@@ -7,6 +7,8 @@ export class ClienteLogic{
     dataNascimento?:string;
     email?:string;
     deletando?:boolean;
+    uf?:string;
+    municipio?:string;
 
     static newCliente(){
         let cliente = new ClienteLogic();

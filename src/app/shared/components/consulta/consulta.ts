@@ -21,7 +21,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class Consulta implements OnInit{
   buscaForm!: FormGroup;
-  displayedColumns: string[] = ['id','nome','email','cpf','dataNascimento','acoes'];
+  displayedColumns: string[] = ['id','nome','email','cpf','dataNascimento','uf','municipio','acoes'];
   nomeBusca:string = '';
   deletando:boolean = false;
   private snack = inject(MatSnackBar);

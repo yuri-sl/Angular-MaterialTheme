@@ -40,6 +40,26 @@
                               mask="00/00/0000"
                                matInput>
                         </mat-form-field>
+                        <mat-form-field class="full-width">
+                            <mat-label>UF</mat-label>
+                            <mat-select formControlName="uf" (selectionChange)="carregarMunicipios($event.value)">
+                                @for (uf of estados; track $index) {
+                                    <mat-option [value]="uf.sigla">
+                                        {{uf.sigla}}    
+                                    </mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="full-width">
+                            <mat-label>Município</mat-label>
+                            <mat-select formControlName="municipio">
+                                @for (municipio of municipios; track $index) {
+                                    <mat-option [value]="municipio.nome">
+                                        {{municipio.nome}}    
+                                    </mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
                     </div>
                 </mat-card-content>
                 <mat-card-actions>
